@@ -5,11 +5,9 @@ Simple ear for testing JSF/CDI issues.
 1. Build by running `mvn install` at the project root
 2. Deploy the clock-ear.ear by running `mvn wildfly:run` from within the **clock-ear** subproject
 3. Test the ear with the default JSF based contexts by running `mvn test` from within the **clock-test** subproject
-4. Change the clock-web/src/main/java/example/clock/Clock.java class annotations from the JSF style to the CDI style:
-	import javax.enterprise.context.ApplicationScoped;
-	import javax.inject.Named;
-	@Named
-	@ApplicationScoped
+   * see the error in the section below
+4. Change the clock-web/src/main/java/example/clock/Clock.java class annotations from the JSF style to the CDI style.
+   * see the git diff for the change in the section below
 5. Rebuild the ear by running `mvn install` at the project root
 6. Redeploy the ear by running `mvn wildfly:redeploy` from the **clock-ear** subproject
 7. Retest the ear by running `mvn test` from the **clock-test** subproject
@@ -63,3 +61,31 @@ Simple ear for testing JSF/CDI issues.
 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142) [rt.jar:1.8.0]
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617) [rt.jar:1.8.0]
 	at java.lang.Thread.run(Thread.java:744) [rt.jar:1.8.0]`
+
+## Git diff for changes in step 4
+
+	[clock-test 834]$ git diff
+	diff --git a/clock-web/src/main/java/example/clock/Clock.java b/clock-web/src/ma
+	index 84851ed..b0135f0 100644
+	--- a/clock-web/src/main/java/example/clock/Clock.java
+	+++ b/clock-web/src/main/java/example/clock/Clock.java
+	@@ -19,8 +19,8 @@ import example.timesource.IClock;
+	 import javax.annotation.PostConstruct;
+	 import javax.annotation.PreDestroy;
+	 import javax.ejb.EJB;
+	-import javax.faces.bean.ApplicationScoped;
+	-import javax.faces.bean.ManagedBean;
+	+import javax.enterprise.context.ApplicationScoped;
+	+import javax.inject.Named;
+	 import java.text.SimpleDateFormat;
+	 import java.util.ArrayList;
+	 import java.util.Date;
+	@@ -43,7 +43,7 @@ import javax.faces.bean.ManagedBean;
+	 @ManagedBean
+	 @ApplicationScoped
+	  */
+	-@ManagedBean
+	+@Named
+	 @ApplicationScoped
+	 public class Clock {
+	    @EJB
